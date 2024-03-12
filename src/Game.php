@@ -48,6 +48,8 @@ class Game implements GameLoopDelegate
 
         $this->mainScene->render($context);
 
+        $this->window->swapBuffers();
+
         $pipeline->execute(++$this->frameIndex, $this->container->resolveProfiler());
     }
 
@@ -62,6 +64,7 @@ class Game implements GameLoopDelegate
         $this->window->setSwapInterval(1);
         $this->mainScene = new MainScene($this->container->resolveGL(), $this->container);
         $this->pipelineResources = new PipelineResources($this->container->resolveGL());
+        $this->window->setEventHandler($this->container->resolveInput());
 
         $this->booted = true;
     }
@@ -69,6 +72,9 @@ class Game implements GameLoopDelegate
     public function start(): void
     {
         $this->boot();
+
+        $this->mainScene->load();
+
         $this->container->resolveGameLoopMain()->start();
     }
 }

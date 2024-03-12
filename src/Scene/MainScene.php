@@ -28,8 +28,6 @@ class MainScene
         $this->renderingSystem = new RenderingSystem2D(
             $this->container->resolveGL(),
         );
-
-        $this->registerSystems();
     }
 
     public function registerSystems(): void
@@ -45,5 +43,10 @@ class MainScene
     public function update(): void
     {
         $this->renderingSystem->update($this->entities);
+    }
+
+    public function load(): void
+    {
+        $this->registerSystems();
     }
 }

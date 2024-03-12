@@ -24,6 +24,7 @@ class RenderingSystem2D implements SystemInterface
      * Background renderer
      */
     private BackgroundRenderer $backgroundRenderer;
+    private FullscreenTextureRenderer $fullscreenRenderer;
 
     /**
      * Constructor
@@ -32,6 +33,7 @@ class RenderingSystem2D implements SystemInterface
         private GLState $gl,
     ) {
         $this->backgroundRenderer = new BackgroundRenderer($this->gl);
+        $this->fullscreenRenderer = new FullscreenTextureRenderer($this->gl);
     }
 
     /**
@@ -73,8 +75,14 @@ class RenderingSystem2D implements SystemInterface
         $backbuffer = $context->data->get(BackbufferData::class)->target;
         $context->pipeline->addPass(new ClearPass($backbuffer));
 
-        $sceneRenderTarget = $context->pipeline->createRenderTarget('scene', 100, 100);
+        $sceneRenderTarget = $context->pipeline->createRenderTarget('scene', 400, 400);
 
         $this->backgroundRenderer->attachPass($context->pipeline, $sceneRenderTarget);
+
+        $sceneColorOptions = new TextureOptions;
+        $sceneColorOptions->internalFormat = GL_RGB;
+        $sceneColor = $context->pipeline->createColorAttachment($sceneRenderTarget, 'sceneColor', $sceneColorOptions);
+
+        $this->fullscreenRenderer->attachPass($context->pipeline, $backbuffer, $sceneColor);
     }
 }

@@ -14,6 +14,7 @@ use VISU\Graphics\Rendering\PipelineResources;
 use VISU\Graphics\Rendering\Pass\CameraData;
 use VISU\Geo\Transform;
 use VISU\Graphics\QuadVertexArray;
+use VISU\Graphics\TextureOptions;
 
 class BackgroundRenderer
 {
@@ -23,8 +24,12 @@ class BackgroundRenderer
     public function __construct(
         private GLState $glState,
     ) {
+        $backgroundOptions = new TextureOptions;
+        $backgroundOptions->minFilter = GL_NEAREST;
+        $backgroundOptions->magFilter = GL_NEAREST;
+
         $this->backgroundTexture  = new Texture($glState, 'background');
-        $this->backgroundTexture->loadFromFile(VISU_PATH_RESOURCES . '/background.jpg');
+        $this->backgroundTexture->loadFromFile(VISU_PATH_RESOURCES . '/background.jpg', $backgroundOptions);
         $this->backgroundVA = new QuadVertexArray($glState);
     }
 
